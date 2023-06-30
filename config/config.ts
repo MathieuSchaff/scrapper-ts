@@ -6,7 +6,7 @@ const numOfPages = 1;
 export interface CommonConfig {
   jobSearch: string;
   location: string;
-  numOfPages: number;
+  numOfPages?: number;
 }
 
 export interface LinkedInConfig {
