@@ -1,4 +1,4 @@
-export default function convertTimeString(timeStr: string): string | null {
+export default function convertTimeString(timeStr: string | null): string | null {
   if (!timeStr) return null;
   if (timeStr === "Promoted") return "No time/Promoted";
   if (timeStr === "hier") {
