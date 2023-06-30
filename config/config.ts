@@ -2,7 +2,30 @@ const email = "my-email-here@gmail.com";
 const jobSearch = "Développeur frontend";
 const location = "France";
 const numOfPages = 1;
-
+export type ContractType =
+  | "Permanent contract"
+  | "Work-study"
+  | "Internship"
+  | "Fixed-term / Temporary"
+  | "Other"
+  | "Freelance"
+  | "Part-time"
+  | "International Corporate Volunteer Program"
+  | "Graduate program"
+  | "Volunteer work"
+  | "IDV"
+  | "all"
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11;
 export interface CommonConfig {
   jobSearch: string;
   location: string;
@@ -20,7 +43,7 @@ export interface LinkedInConfig {
 export interface WelcomeToTheJungleConfig {
   email?: string;
   password?: string;
-  contractType: string;
+  contractType: ContractType | number[];
   remote: string;
 }
 
