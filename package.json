@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node app/index.ts"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
