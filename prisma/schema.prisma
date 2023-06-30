@@ -13,15 +13,15 @@ datasource db {
 // schema.prisma
 
 model Job {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   company   String? // ? indicates that it is nullable
   title     String?
   link      String?
   location  String?
-  tags      String[]  @default([]) // array of strings
+  tags      String?  @default("") // Use string to represent array
   details   String?
-  time      DateTime? // or String? depending on the format
-  createdAt DateTime  @default(now())
+  time      String?
+  createdAt DateTime @default(now())
 }
 
 model Account {
