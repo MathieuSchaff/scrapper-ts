@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node app/index.ts"
+    "start": "ts-node app/index"
   },
-  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
