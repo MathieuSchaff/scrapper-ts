@@ -30,8 +30,6 @@ export async function wttjglScrapper({
   common: CommonConfig;
   welcomeToTheJungle?: WelcomeToTheJungleConfig
 }): Promise<void> {
-  console.log("Common:", common);
-  console.log("Welcome to the Jungle:", welcomeToTheJungle);
   const browser = await chromium.launch({
     headless: false,
     slowMo: 50,
@@ -230,18 +228,6 @@ export async function wttjglScrapper({
           tags.push(tagContent);
         }
       }
-      const tagsAsString = tags.length > 0 ? JSON.stringify(tags) : null;
-      let job = await prisma.job.create({
-        data: {
-          company: jobCompanyName,
-          title: jobTitle,
-          link: jobLink,
-          location: jobLocation,
-          time: jobTime,
-          tags: tagsAsString,
-        },
-      });
-      console.log(job)
       jobs.push({
         company: jobCompanyName,
         title: jobTitle,
@@ -287,10 +273,23 @@ export async function wttjglScrapper({
       await page.waitForSelector("main section");
 
       const sectionsFromJob = await page.$$eval("main section", (sections) => {
-        return sections.map((section) => section.textContent);
+        return sections.map((section) => section.textContent).join(". ");
       });
       jobsWithSections.push({ ...job, details: sectionsFromJob });
 
+      const tagsAsString = JSON.stringify(job.tags ?? null)
+      const jobWithDetails = await prisma.job.create({
+        data: {
+          company: job.company,
+          title: job.title,
+          link: job.link,
+          location: job.location,
+          time: job.time,
+          tags: tagsAsString,
+          details: sectionsFromJob,
+        },
+      });
+      console.log(jobWithDetails)
       // Close the page when we're done with it
       await page.close();
     }
