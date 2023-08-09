@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import getRandomInt from "../app/utils/randomInt.ts";
-test.only('if search are on the document', async ({ page }) => {
-
+test('if search are on the document', async ({ page }) => {
   await page.goto("https://www.welcometothejungle.com/en/jobs?refinementList%5Boffices.country_code%5D%5B%5D=FR&query=react%20js&page=1")
   await page.mainFrame().waitForSelector("header");
   const jobLink = page.getByRole("link", {
@@ -23,7 +22,12 @@ test.only('if search are on the document', async ({ page }) => {
   const locationInput = page.getByTestId('jobs-home-search-field-location')
   await expect(locationInput).toHaveAttribute('value', '', { timeout: 1000 });
 });
-
+test('if items are displayed', async ({ page }) => {
+  await page.goto("https://www.welcometothejungle.com/en/jobs?refinementList%5Boffices.country_code%5D%5B%5D=FR&query=react%20js&page=1");
+  await page.waitForSelector(".ais-Hits-list-item");
+  const articles = page.locator(".ais-Hits-list-item");
+  expect(await articles.count()).toBeGreaterThan(0);
+});
 test('if filters works', async ({ page }) => {
   await page.goto("https://www.welcometothejungle.com/en/jobs?refinementList%5Boffices.country_code%5D%5B%5D=FR&query=react%20js&page=1")
   const filtersAllButton = page.locator("#jobs-search-filter-all");
@@ -53,13 +57,6 @@ test('if filters works', async ({ page }) => {
   const getUnknown = page.getByTestId('jobs-search-all-modal-experience').getByTestId('include-unknown-checkbox')
   await getUnknown.waitFor({ state: "visible" });
   await getUnknown.click({ delay: 500 });
-  await page.waitForTimeout(1000);
-  expect(getUnknown).toBeChecked({ checked: true, timeout: 500 });
+  await expect(getUnknown).toBeChecked({ checked: true, timeout: 500 });
+});
 
-});
-test('if items are displayed', async ({ page }) => {
-  await page.goto("https://www.welcometothejungle.com/en/jobs?refinementList%5Boffices.country_code%5D%5B%5D=FR&query=react%20js&page=1");
-  await page.waitForSelector(".ais-Hits-list-item");
-  const articles = page.locator(".ais-Hits-list-item");
-  expect(await articles.count()).toBeGreaterThan(0);
-});
