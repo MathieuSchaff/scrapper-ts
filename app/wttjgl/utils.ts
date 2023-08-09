@@ -1,4 +1,4 @@
-import type { ContractType } from '../../config/config.ts';
+import type { WTTJGLContractType } from '../../config/config.ts';
 const contractTypes = [
   {
     name: "Permanent contract",
@@ -14,7 +14,7 @@ const contractTypes = [
   { name: "Freelance", id: "jobs-search-all-modal-contract-FREELANCE" },
 ];
 
-export default function getContractTypeId(contractType: ContractType | number[]) {
+export default function getContractTypeId(contractType: WTTJGLContractType | number[]) {
   if (!contractType) return null;
   // If contractType is an array of numbers, get the corresponding IDs
   if (Array.isArray(contractType)) {
