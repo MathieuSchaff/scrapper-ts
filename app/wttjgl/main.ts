@@ -111,14 +111,10 @@ export async function wttjglScrapper({
 
   await page.waitForTimeout(getRandomInt(2000, 5000));
   // CLEAR INPUT LOCATION
-  const clearLocationButton = page.getByLabel('Clear all')
-  await clearLocationButton.click();
+  const clearLocationButton = page.getByLabel('Clear all').nth(1)
+  await clearLocationButton.click({ delay: getRandomInt(100, 500) });
 
   await page.waitForTimeout(getRandomInt(2000, 5000));
-
-  // const locationSearchButton = page.locator(
-  //   '[data-testid="jobs-home-search-field-location"]'
-  // );
 
   const locationInput = page.getByTestId('jobs-home-search-field-location')
   await locationInput.focus();
@@ -128,7 +124,8 @@ export async function wttjglScrapper({
   await locationInput.press("Enter");
   // FILTERS BLOCK
   // if (Object.keys(welcomeToTheJungle).length > 0) {
-  if (welcomeToTheJungle?.filters && Object.keys(welcomeToTheJungle?.filters).length > 0) {
+  if (welcomeToTheJungle?.filters &&
+    Object.keys(welcomeToTheJungle?.filters).length > 0) {
     const filtersAllButton = page.locator("#jobs-search-filter-all");
     await filtersAllButton.click({ delay: getRandomInt(100, 500) });
     // FILTERS CONTRAT TYPE
@@ -186,7 +183,7 @@ export async function wttjglScrapper({
           .locator(experienceOptions[experience])
           .click({ delay: getRandomInt(100, 500) });
       }
-      const getUnknown = page.locator('#has_experience_level_minimum');
+      const getUnknown = page.getByTestId('jobs-search-all-modal-experience').getByTestId('include-unknown-checkbox')
       await getUnknown.click({ delay: getRandomInt(100, 500) });
     }
     await page.locator("#jobs-search-modal-search-button").click({ delay: getRandomInt(100, 500) });
