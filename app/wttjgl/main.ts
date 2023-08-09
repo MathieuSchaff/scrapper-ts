@@ -46,12 +46,11 @@ export async function wttjglScrapper({
   // time out to wait for the page to load
   await page.mainFrame().waitForSelector("header");
   // LOGIN BLOCK
-  if ((welcomeToTheJungle?.email && welcomeToTheJungle?.password)) {
+  if ((welcomeToTheJungle?.account?.email && welcomeToTheJungle?.account?.password)) {
     const loginButtons = page.locator(
       '[data-testid="header-user-button-login"]'
     );
     if ((await loginButtons.count()) > 0) {
-      console.log("entered login button is here");
       const firstLoginButton = loginButtons.nth(0); // If you want the second, use nth(1)
 
       // Wait for the button to be attached to the DOM
@@ -65,7 +64,7 @@ export async function wttjglScrapper({
       await emailInput.waitFor({ state: "visible" });
 
       // Type into the email input field with a delay between key presses
-      await emailInput.type(welcomeToTheJungle.email, {
+      await emailInput.type(welcomeToTheJungle.account.email, {
         delay: getRandomInt(50, 150),
       });
 
@@ -76,7 +75,7 @@ export async function wttjglScrapper({
       await passwordInput.waitFor({ state: "visible" });
 
       // Type into the password input field with a delay between key presses
-      await passwordInput.type(welcomeToTheJungle.password, {
+      await passwordInput.type(welcomeToTheJungle.account.password, {
         delay: getRandomInt(50, 150),
       });
 
@@ -111,72 +110,88 @@ export async function wttjglScrapper({
   await jobSearchButton.press("Enter");
 
   await page.waitForTimeout(getRandomInt(2000, 5000));
-
-  const clearLocationButton = page.locator(
-    '[data-testid="jobs-home-search-field-location"] + div button'
-  );
+  // CLEAR INPUT LOCATION
+  const clearLocationButton = page.getByLabel('Clear all')
   await clearLocationButton.click();
 
-  // await page.waitForTimeout(getRandomInt(2000, 5000));
+  await page.waitForTimeout(getRandomInt(2000, 5000));
 
-  const locationSearchButton = page.locator(
-    '[data-testid="jobs-home-search-field-location"]'
-  );
-  await locationSearchButton.focus();
-  await locationSearchButton.type(common.location, {
+  // const locationSearchButton = page.locator(
+  //   '[data-testid="jobs-home-search-field-location"]'
+  // );
+
+  const locationInput = page.getByTestId('jobs-home-search-field-location')
+  await locationInput.focus();
+  await locationInput.type(common.location, {
     delay: getRandomInt(100, 500),
   });
-  await locationSearchButton.press("Enter");
-  // CONTRACT BLOCK
-  if (
-    welcomeToTheJungle?.contractType !== undefined &&
-    welcomeToTheJungle?.contractType !== null &&
-    welcomeToTheJungle?.contractType !== "all"
-  ) {
-    await page
-      .locator('[data-testid="jobs-search-select-filter-contract"]')
-      .click({ delay: getRandomInt(100, 500) });
+  await locationInput.press("Enter");
+  // FILTERS BLOCK
+  // if (Object.keys(welcomeToTheJungle).length > 0) {
+  if (welcomeToTheJungle?.filters && Object.keys(welcomeToTheJungle?.filters).length > 0) {
+    const filtersAllButton = page.locator("#jobs-search-filter-all");
+    await filtersAllButton.click({ delay: getRandomInt(100, 500) });
+    // FILTERS CONTRAT TYPE
+    if (
+      welcomeToTheJungle?.filters?.contractType
+      && Object.keys(welcomeToTheJungle?.filters?.contractType).length > 0
+      && welcomeToTheJungle?.filters?.contractType !== "all"
+    ) {
+      // await page
+      //   .locator('[data-testid="jobs-search-select-filter-contract"]')
+      //   .click({ delay: getRandomInt(100, 500) });
 
-    const buttonId = getContractTypeId(welcomeToTheJungle.contractType);
-    if (Array.isArray(buttonId)) {
-      for (const id of buttonId) {
-        await page.locator(`#${id}`).click({ delay: getRandomInt(100, 500) });
+      const buttonId = getContractTypeId(welcomeToTheJungle.filters.contractType);
+      if (Array.isArray(buttonId)) {
+        for (const id of buttonId) {
+          await page.locator(`#${id}`).click({ delay: getRandomInt(100, 500) });
+        }
+      } else {
+        await page
+          .locator(`#${buttonId}`)
+          .click({ delay: getRandomInt(100, 500) });
       }
-    } else {
-      await page
-        .locator(`#${buttonId}`)
-        .click({ delay: getRandomInt(100, 500) });
     }
-    await page
-      .locator('[data-testid="jobs-search-select-filter-contract"]')
-      .click({ delay: getRandomInt(100, 500) });
-  }
-  if (
-    welcomeToTheJungle?.remote !== undefined &&
-    welcomeToTheJungle?.remote !== null &&
-    welcomeToTheJungle?.remote !== "all"
-  ) {
-    await page.waitForSelector("#jobs-search-filter-remote");
-    await page
-      .locator("#jobs-search-filter-remote")
-      .click({ delay: getRandomInt(100, 500) });
-    const remoteWorkOptions = {
-      no: "#jobs-search-filter-remote-no",
-      punctual: "#jobs-search-filter-remote-punctual",
-      partial: "#jobs-search-filter-remote-partial",
-      fulltime: "#jobs-search-filter-remote-fulltime",
-    };
-    // const remoteChoice = welcomeToTheJungle?.remote;
-    const remoteChoice = welcomeToTheJungle?.remote as keyof typeof remoteWorkOptions;
-    await page
-      .locator(remoteWorkOptions[remoteChoice])
-      .click({ delay: getRandomInt(100, 500) });
-    await page
-      .locator("#jobs-search-modal-search-button")
-      .click({ delay: getRandomInt(100, 500) });
-  }
-  // END OF BLOCK CONTRACT JOBS
+    // END FILTERS CONTRACT TYPE
+    // FILTERS REMOTE
+    if (
+      welcomeToTheJungle?.filters?.remote !== undefined &&
+      welcomeToTheJungle?.filters.remote !== null &&
+      welcomeToTheJungle?.filters.remote !== "all"
+    ) {
 
+      const remoteWorkOptions = {
+        no: "#jobs-search-all-modal-remote-no",
+        punctual: "#jobs-search-all-modal-remote-punctual",
+        partial: "#jobs-search-all-modal-remote-partial",
+        fulltime: "#jobs-search-all-modal-remote-fulltime",
+      };
+
+      const remoteChoice = welcomeToTheJungle?.filters?.remote as keyof typeof remoteWorkOptions;
+      await page
+        .locator(remoteWorkOptions[remoteChoice])
+        .click({ delay: getRandomInt(100, 500) });
+      // END OF BLOCK CONTRACT JOBS
+    }
+    const experienceOptions = [
+      "#jobs-search-all-modal-experience-0-1",
+      "#jobs-search-all-modal-experience-1-3",
+      "#jobs-search-all-modal-experience-3-5",
+      "#jobs-search-all-modal-experience-5-10",
+    ]
+    if (welcomeToTheJungle?.filters?.experienceLevel !== undefined &&
+      welcomeToTheJungle?.filters?.experienceLevel.length > 0) {
+      for (const experience of welcomeToTheJungle?.filters?.experienceLevel) {
+        await page
+          .locator(experienceOptions[experience])
+          .click({ delay: getRandomInt(100, 500) });
+      }
+      const getUnknown = page.locator('#has_experience_level_minimum');
+      await getUnknown.click({ delay: getRandomInt(100, 500) });
+    }
+    await page.locator("#jobs-search-modal-search-button").click({ delay: getRandomInt(100, 500) });
+    // END FILTERS REMOTE
+  }
   interface Job {
     company: string | null;
     title: string | null;
