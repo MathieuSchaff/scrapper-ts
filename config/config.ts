@@ -2,30 +2,21 @@ const email = "my-email-here@gmail.com";
 const jobSearch = "Développeur frontend";
 const location = "France";
 const numOfPages = 1;
-export type ContractType =
+export type WTTJGLContractType =
   | "Permanent contract"
   | "Work-study"
   | "Internship"
   | "Fixed-term / Temporary"
   | "Other"
   | "Freelance"
-  | "Part-time"
-  | "International Corporate Volunteer Program"
-  | "Graduate program"
-  | "Volunteer work"
-  | "IDV"
   | "all"
   | 1
   | 2
   | 3
   | 4
   | 5
-  | 6
-  | 7
-  | 8
-  | 9
-  | 10
-  | 11;
+  | 6;
+export type WTTJGLExperience = Array<0 | 1 | 2 | 3 | 4>;
 export interface CommonConfig {
   jobSearch: string;
   location: string;
@@ -41,10 +32,15 @@ export interface LinkedInConfig {
 }
 
 export interface WelcomeToTheJungleConfig {
-  email?: string;
-  password?: string;
-  contractType: ContractType | number[];
-  remote: string;
+  account?: {
+    email: string;
+    password: string;
+  };
+  filters?: {
+    contractType?: WTTJGLContractType | number[];
+    remote?: string;
+    experienceLevel?: WTTJGLExperience;
+  };
 }
 
 export interface IndeedConfig {
@@ -74,10 +70,9 @@ export const config: Config = {
     experienceLevel: 4,
   },
   welcomeToTheJungle: {
-    // email: "myEmail@email.com",
-    // password: "mySecretPassword",
-    contractType: "all",
-    remote: "all",
+    filters: {
+      experienceLevel: [0, 1]
+    }
   },
   indeed: {
     contractType: 1,

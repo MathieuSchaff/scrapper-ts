@@ -7,8 +7,6 @@ async function main() {
   // ... you will write your Prisma Client queries here
   const jobs = await prisma.job.findMany()
   console.log(jobs)
-
-
 }
 
 main()
