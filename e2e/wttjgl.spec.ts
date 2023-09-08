@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import getRandomInt from "../app/utils/randomInt.ts";
+import getRandomInt from "../app/utils/randomInt.js";
 test('if search are on the document', async ({ page }) => {
   await page.goto("https://www.welcometothejungle.com/en/jobs?refinementList%5Boffices.country_code%5D%5B%5D=FR&query=react%20js&page=1")
   await page.mainFrame().waitForSelector("header");
