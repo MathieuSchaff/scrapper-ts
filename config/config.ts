@@ -64,7 +64,7 @@ export const config: Config = {
     numOfPages,
   },
   linkedin: {
-    email,
+    email: email,
     password: "mySecretPassword",
     remote: 1,
     datePosted: 1,
