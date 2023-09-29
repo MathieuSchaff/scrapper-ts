@@ -16,6 +16,7 @@ export type WTTJGLContractType =
   | 4
   | 5
   | 6;
+
 export type WTTJGLExperience = Array<0 | 1 | 2 | 3 | 4>;
 export interface CommonConfig {
   jobSearch: string;
@@ -71,6 +72,7 @@ export const config: Config = {
   },
   welcomeToTheJungle: {
     filters: {
+      contractType: [1, 2, 3, 4, 5, 6],
       experienceLevel: [0, 1]
     }
   },
