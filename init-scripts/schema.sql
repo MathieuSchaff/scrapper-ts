@@ -1,6 +1,6 @@
--- Creating the User table
+-- Creating the User table if it doesn't exist
 CREATE TABLE
-  "User" (
+  IF NOT EXISTS "User" (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     name VARCHAR(255),
@@ -9,18 +9,18 @@ CREATE TABLE
     CONSTRAINT valid_role CHECK (role IN ('USER', 'ADMIN'))
   );
 
--- Creating the Profile table
+-- Creating the Profile table if it doesn't exist
 CREATE TABLE
-  "Profile" (
+  IF NOT EXISTS "Profile" (
     id SERIAL PRIMARY KEY,
     bio TEXT,
     userId INTEGER UNIQUE,
     CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES "User" (id)
   );
 
--- Creating the Job table
+-- Creating the Job table if it doesn't exist
 CREATE TABLE
-  "Job" (
+  IF NOT EXISTS "Job" (
     id SERIAL PRIMARY KEY,
     company VARCHAR(255),
     title VARCHAR(255),
@@ -34,9 +34,9 @@ CREATE TABLE
     CONSTRAINT fk_author FOREIGN KEY (authorId) REFERENCES "User" (id) ON DELETE CASCADE
   );
 
--- Enum for the Role field in the User table
-CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
+-- Enum for the Role field in the User table if it doesn't exist
+CREATE TYPE IF NOT EXISTS "Role" AS ENUM ('USER', 'ADMIN');
 
--- Altering the User table to add the Role field
-ALTER TABLE "User"
-ADD COLUMN role "Role" DEFAULT 'USER';
+-- Altering the User table to add the Role field if it doesn't exist
+ALTER TABLE IF NOT EXISTS "User"
+ADD COLUMN IF NOT EXISTS role "Role" DEFAULT 'USER';
