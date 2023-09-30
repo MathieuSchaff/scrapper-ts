@@ -7,7 +7,7 @@ services:
       - ./data/db:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
     ports:
-      - 5433:5432
+      - 5432:5432
 
     environment:
       - POSTGRES_DB=testDB
@@ -19,3 +19,4 @@ services:
     restart: always
     ports:
       - 8080:8080
+
