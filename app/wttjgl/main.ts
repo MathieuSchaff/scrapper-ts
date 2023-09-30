@@ -280,27 +280,18 @@ export async function wttjglScrapper({
       jobsWithSections.push({ ...job, details: sectionsFromJob });
 
       const tagsAsString = JSON.stringify(job.tags ?? null)
-      // const jobWithDetails = await prisma.job.create({
-      //   data: {
-      //     company: job.company,
-      //     title: job.title,
-      //     link: job.link,
-      //     location: job.location,
-      //     time: job.time,
-      //     tags: tagsAsString,
-      //     details: sectionsFromJob,
-      //   },
-      // });
-      // console.log(jobWithDetails)
-      console.log({
-        company: job.company,
-        title: job.title,
-        link: job.link,
-        location: job.location,
-        time: job.time,
-        tags: tagsAsString,
-        details: sectionsFromJob,
-      })
+      const jobWithDetails = await prisma.job.create({
+        data: {
+          company: job.company,
+          title: job.title,
+          link: job.link,
+          location: job.location,
+          time: job.time,
+          tags: tagsAsString,
+          details: sectionsFromJob,
+        },
+      });
+      console.log(jobWithDetails)
       // Close the page when we're done with it
       await page.close();
     }
