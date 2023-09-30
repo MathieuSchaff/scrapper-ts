@@ -1,17 +1,8 @@
-// NODE JS IMPORTS
-// import fs from "fs/promises";
-// import path from "path";
-// import { fileURLToPath } from "url";
 import { WelcomeToTheJungleConfig, CommonConfig } from "../../config/config.ts";
-// PRisma 
 import { prisma } from "../utils/prisma/utils.ts";
-// use `prisma` in your application to read and write data in your DB
 
-// UTILS
-// import getUniqueFilename from "../utils/uniqueFileName.ts";
 import getContractTypeId from "./utils.ts";
 import getRandomInt from "../utils/randomInt.ts";
-import convertTimeString from "../utils/timeConverter.ts";
 // PLAYWRIGHT SPECIFIC IMPORTS
 // Load the stealth plugin and use defaults (all tricks to hide playwright usage)
 // Note: playwright-extra is compatible with most puppeteer-extra plugins
@@ -91,14 +82,14 @@ export async function wttjglScrapper({
   }
   // END OF LOGIN BLOCK
   //
-  // Go to the job page
+  // BLOCK => Go to the job page
   const jobLink = page.getByRole("link", {
     name: "Find a job",
     exact: true,
   });
   await jobLink.waitFor({ state: "attached" });
   await jobLink.click();
-
+  // END OF BLOCK => Go to the job page
   const jobSearchButton = page.locator(
     '[data-testid="jobs-home-search-field-query"]'
   );
@@ -153,8 +144,7 @@ export async function wttjglScrapper({
     // FILTERS REMOTE
     if (
       welcomeToTheJungle?.filters?.remote !== undefined &&
-      welcomeToTheJungle?.filters.remote !== null &&
-      welcomeToTheJungle?.filters.remote !== "all"
+      welcomeToTheJungle?.filters.remote !== null
     ) {
 
       const remoteWorkOptions = {
@@ -290,18 +280,27 @@ export async function wttjglScrapper({
       jobsWithSections.push({ ...job, details: sectionsFromJob });
 
       const tagsAsString = JSON.stringify(job.tags ?? null)
-      const jobWithDetails = await prisma.job.create({
-        data: {
-          company: job.company,
-          title: job.title,
-          link: job.link,
-          location: job.location,
-          time: job.time,
-          tags: tagsAsString,
-          details: sectionsFromJob,
-        },
-      });
-      console.log(jobWithDetails)
+      // const jobWithDetails = await prisma.job.create({
+      //   data: {
+      //     company: job.company,
+      //     title: job.title,
+      //     link: job.link,
+      //     location: job.location,
+      //     time: job.time,
+      //     tags: tagsAsString,
+      //     details: sectionsFromJob,
+      //   },
+      // });
+      // console.log(jobWithDetails)
+      console.log({
+        company: job.company,
+        title: job.title,
+        link: job.link,
+        location: job.location,
+        time: job.time,
+        tags: tagsAsString,
+        details: sectionsFromJob,
+      })
       // Close the page when we're done with it
       await page.close();
     }
